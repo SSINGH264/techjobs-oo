@@ -78,7 +78,6 @@ public class JobController {
             int jobId = job.getId();
             return "redirect:/job?id="+jobId;
         } else {
-            model.addAttribute(new JobForm());
             return "new-job";
         }
 
