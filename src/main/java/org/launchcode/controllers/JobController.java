@@ -1,6 +1,6 @@
 package org.launchcode.controllers;
 
-import org.launchcode.models.Job;
+import org.launchcode.models.*;
 import org.launchcode.models.forms.JobForm;
 import org.launchcode.models.data.JobData;
 import org.springframework.stereotype.Controller;
@@ -43,7 +43,44 @@ public class JobController {
         // new Job and add it to the jobData data store. Then
         // redirect to the job detail view for the new Job.
 
-        return "";
+        if (!jobForm.getName().isEmpty()) {
+            Employer employer = null;
+            Location location = null;
+            PositionType positionType = null;
+            CoreCompetency coreCompetency = null;
+
+            for (Employer e : jobForm.getEmployers()) {
+                if (e.getId() == jobForm.getEmployerId()) {
+                    employer = e;
+                }
+            }
+
+            for (Location l: jobForm.getLocations()) {
+                if (l.getId() == jobForm.getLocationId()) {
+                    location = l;
+                }
+            }
+
+            for (PositionType p: jobForm.getPositionTypes()) {
+                if (p.getId() == jobForm.getPositionTypeId()) {
+                    positionType = p;
+                }
+            }
+
+            for (CoreCompetency c: jobForm.getCoreCompetencies()) {
+                if (c.getId() == jobForm.getCoreCompetencyId()) {
+                    coreCompetency = c;
+                }
+            }
+
+            Job job = new Job(jobForm.getName(), employer, location, positionType, coreCompetency);
+            jobData.add(job);
+            int jobId = job.getId();
+            return "redirect:/job?id="+jobId;
+        } else {
+            model.addAttribute(new JobForm());
+            return "new-job";
+        }
 
     }
 }
